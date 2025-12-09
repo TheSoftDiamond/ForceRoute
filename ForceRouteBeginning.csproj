@@ -68,7 +68,7 @@
 		<GaleProfile>BCDev2</GaleProfile>
 
 		<!-- Gale plugins folder -->
-		<GalePluginsFolder>$(AppData)\com.kesomannen.gale\lethal-company\profiles\$(GaleProfile)\BepInEx\plugins\SoftDiamond-PushCompanyFork</GalePluginsFolder>
+		<GalePluginsFolder>$(AppData)\com.kesomannen.gale\lethal-company\profiles\$(GaleProfile)\BepInEx\plugins\SoftDiamond-ForceRoute</GalePluginsFolder>
 
 		<!-- Other settings -->
 		<PlatformTarget>AnyCPU</PlatformTarget>
