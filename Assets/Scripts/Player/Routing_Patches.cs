@@ -10,6 +10,7 @@ using UnityEngine.InputSystem.Controls;
 
 namespace ForceRoute.Assets.Scripts
 {
+    [HarmonyPatch]
     public static class Routing_Patches
     {
 
@@ -23,9 +24,9 @@ namespace ForceRoute.Assets.Scripts
 
         public static string PlanetName;
 
-        public static string GetRandomMoon(string PlanetName)
+        public static string GetRandomMoon(string PlanetsList)
         {
-            string[] planetList = PlanetName.Split(',');
+            string[] planetList = PlanetsList.Split(',');
 
             return planetList[Math.Abs(System.Guid.NewGuid().GetHashCode()) % planetList.Length].Trim();
         }
@@ -46,7 +47,7 @@ namespace ForceRoute.Assets.Scripts
                     }
 
                     ForceRouteBase.Instance.mls.LogDebug($"Found Selectable Level: {SelectableLevelName.PlanetName} | {SelectableLevelName.levelID}");
-                    StartOfRound.Instance.ChangeLevel(SelectableLevelName.levelID);
+                    StartOfRound.Instance.ChangeLevelServerRpc(SelectableLevelName.levelID, UnityEngine.Object.FindObjectOfType<Terminal>().groupCredits);
                 }
                 catch (System.Exception e)
                 {
@@ -77,7 +78,7 @@ namespace ForceRoute.Assets.Scripts
             }
 
             ForceRouteBase.Instance.mls.LogDebug("Days Spent: " + StartOfRound.Instance.gameStats.daysSpent);
-            if (StartOfRound.Instance.gameStats.daysSpent == 0)
+            if (StartOfRound.Instance.gameStats.daysSpent <= 0)
             {
                 PlanetName = GetRandomMoon(PlanetNames);
                 TrySetPlanet(PlanetName);
@@ -86,7 +87,7 @@ namespace ForceRoute.Assets.Scripts
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(TimeOfDay), "OnDayChanged")]
-        public static void ResetShip(StartOfRound __instance)
+        public static void OnDayChanged(StartOfRound __instance)
         {
             if (NetworkManager.Singleton.IsServer)
             {
